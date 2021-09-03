@@ -8,7 +8,7 @@ from threading import Thread
 
 
 socket_ = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-socket_.bind(('127.0.0.1', 8080))
+socket_.bind(('localhost', 8080))
 socket_.listen(5)
 
 url_wikipedia = 'https://uk.wikipedia.org/wiki/%D0%9C%D1%96%D1%81%D1%82%D0%B0_%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D0%B8_(%D0%B7%D0%B0_%D0%BD%D0%B0%D1%81%D0%B5%D0%BB%D0%B5%D0%BD%D0%BD%D1%8F%D0%BC)'
