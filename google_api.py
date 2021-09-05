@@ -28,7 +28,7 @@ def make_weather_record(column, city, precipitation):
     # data_from_sheet = result.get('values', [])
     service.update(
         spreadsheetId=SAMPLE_SPREADSHEET_ID,
-        range=f'{SAMPLE_RANGE_NAME}!A{column}:B{column}',
+        range=f'{SAMPLE_RANGE_NAME}!A{column}:C{column}',
         valueInputOption='USER_ENTERED',
-        body={'values': [[city, precipitation]]},
+        body={'values': [[city, precipitation, '2']]},
     ).execute()
