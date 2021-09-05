@@ -11,10 +11,10 @@ from flask import Flask
 app = Flask(__name__)
 
 
-# @app.route("/")
-# def hello_world():
-#     name = os.environ.get("NAME", "World")
-#     return "Hello {}!".format(name)
+@app.route("/")
+def hello_world():
+    name = os.environ.get("NAME", "World")
+    return "Hello {}!".format(name)
 
 socket_ = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 socket_.bind(('localhost', 8080))
@@ -101,12 +101,8 @@ def delay_weather_update():
             parse()
 
 
-# if __name__ == '__main__':
-#     thread = Thread(target=listen_port)
-#     thread.daemon = True
-#     thread.start()
-#     parse()
-
-if __name__ == "__main__":
-    parse()
+if __name__ == '__main__':
+    thread = Thread(target=parse)
+    thread.daemon = True
+    thread.start()
     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
