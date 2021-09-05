@@ -3,49 +3,18 @@ from bs4 import BeautifulSoup
 import json
 from google_api import make_weather_record
 from datetime import datetime
-import socket, time
-from threading import Thread
-import os
-from flask import Flask
 
-app = Flask(__name__)
-
-
-@app.route("/")
-def hello_world():
-    name = os.environ.get("NAME", "World")
-    return "Hello {}!".format(name)
-
-socket_ = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-socket_.bind(('localhost', 8080))
-socket_.listen(5)
 
 url_wikipedia = 'https://uk.wikipedia.org/wiki/%D0%9C%D1%96%D1%81%D1%82%D0%B0_%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D0%B8_(%D0%B7%D0%B0_%D0%BD%D0%B0%D1%81%D0%B5%D0%BB%D0%B5%D0%BD%D0%BD%D1%8F%D0%BC)'
-headers_wikipedia = {'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36',
-                     }
+headers_wikipedia = {'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36'}
 token_gismeteo = {'X-Gismeteo-Token' : '605091efde0a99.85836198'}
 url_gismeteo = 'https://api.gismeteo.net/v2/weather/current/'
 city_id = 'https://api.gismeteo.net/v2/search/cities/?lang=ua&query='
 
-type_precipitation = ('Нет осадков', 'Дождь', 'Снег', 'Смешанные осадки', 'За Вашим запитом нічого не знайдено ')
+type_precipitation = ('Нет осадков', 'Дождь', 'Снег', 'Смешанные осадки', 'По вашему запросу ничего не найдено')
 
 previous_result = {}
 
-
-def listen_port():
-    while True:
-        time.sleep(5)
-        (client_, address) = socket_.accept()
-        data = client_.recv(2**9)
-        if data.lower() == 'q':
-            socket_.close()
-            break
-
-        print("RECEIVED: %s" % data)
-        socket_.sendall(b'OK')
-        if data.lower() == 'q':
-            socket_.close()
-            break
 
 def get_html():
     response = requests.get(url_wikipedia, headers=headers_wikipedia)
@@ -71,7 +40,7 @@ def get_content(html):
                 )
                 previous_result[city] = current_weather
 
-@app.route('/')
+
 def parse():
     html = get_html()
     if html.status_code == 200:
@@ -99,10 +68,3 @@ def delay_weather_update():
     while True:
         if (datetime.now() - current_time).seconds > 3 * 60 *60:
             parse()
-
-
-if __name__ == '__main__':
-    thread = Thread(target=parse)
-    thread.daemon = True
-    thread.start()
-    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))

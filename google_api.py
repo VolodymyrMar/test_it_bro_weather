@@ -30,5 +30,5 @@ def make_weather_record(column, city, precipitation):
         spreadsheetId=SAMPLE_SPREADSHEET_ID,
         range=f'{SAMPLE_RANGE_NAME}!A{column}:C{column}',
         valueInputOption='USER_ENTERED',
-        body={'values': [[city, precipitation, '2']]},
+        body={'values': [[city, precipitation, '3']]},
     ).execute()
